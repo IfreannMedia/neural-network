@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class Neuron : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+
+    public int numInputs;
+    public double bias;
+    public double output;
+    public double errorGradient;
+    public List<double> weights = new List<double>();
+    public List<double> inputs = new List<double>();
+
+    public Neuron(int nInputs)
     {
-        
+        bias = UnityEngine.Random.Range(-1f, 1f);
+        numInputs = nInputs;
+        for (int i = 0; i < nInputs; i++)
+        {
+
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
