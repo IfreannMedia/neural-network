@@ -18,7 +18,7 @@ public class Neuron : MonoBehaviour
         numInputs = nInputs;
         for (int i = 0; i < nInputs; i++)
         {
-
+            weights.Add(UnityEngine.Random.Range(-1f, 1f));
         }
     }
 
