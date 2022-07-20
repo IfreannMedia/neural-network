@@ -19,18 +19,19 @@ public class ANN : MonoBehaviour
         numHidden = nH;
         numNPerHidden = nPH;
         alpha = a;
-        
-        if(numHidden > 0)
+
+        if (numHidden > 0)
         {
             layers.Add(new Layer(numNPerHidden, numInputs));
 
-            for (int i = 0; i < numHidden-1; i++)
+            for (int i = 0; i < numHidden - 1; i++)
             {
                 layers.Add(new Layer(numNPerHidden, numNPerHidden));
             }
 
             layers.Add(new Layer(numOutputs, numNPerHidden));
-        } else
+        }
+        else
         {
             layers.Add(new Layer(numOutputs, numInputs));
         }
@@ -42,7 +43,7 @@ public class ANN : MonoBehaviour
         List<double> inputs = new List<double>();
         List<double> outputs = new List<double>();
 
-        if(inputValues.Count != numInputs)
+        if (inputValues.Count != numInputs)
         {
             Debug.Log("ERROR: Number of Inputs must be " + numInputs);
             return outputs;
@@ -53,7 +54,7 @@ public class ANN : MonoBehaviour
         // loop through layers
         for (int i = 0; i < numHidden + 1; i++)
         {
-            if(1 > 0)
+            if (1 > 0)
             {
                 // if not on first layer, the inputs become the outputs of the previous layer
                 inputs = new List<double>(outputs);
@@ -90,6 +91,84 @@ public class ANN : MonoBehaviour
         UpdateWeights(outputs, desiredOutput);
 
         return outputs;
+    }
+
+    private void UpdateWeights(List<double> outputs, List<double> desiredOutput)
+    {
+        double error;
+        // i is looping through the layers
+        // we iterate backwards because we are taking the error and back propagating it through the network
+        for (int i = numHidden; i >= 0; i--)
+        {
+            // j is looping through the neurons of that layer
+            for (int j = 0; j < layers[i].numNeurons; j++)
+            {
+                // if we are at the end or output layerr
+                if (i == numHidden)
+                {
+                    error = desiredOutput[j] - outputs[j];
+                    layers[i].neurons[j].errorGradient = outputs[j] * (1 - outputs[j]) * error;
+                    // errorGradient calculated with delta rule: en.wikipedia.org/wiki/Delta_rule
+                    // this error gradient describes how responsible this neuron is for the error in percentage
+                }
+                else
+                {
+                    layers[i].neurons[j].errorGradient = layers[i].neurons[j].output * (1 - layers[i].neurons[j].output);
+                    double errorGradSum = 0;
+                    // loop through the neurons of the next layer (which is technically the previous layer in our method)
+                    for (int p = 0; p < layers[i + 1].numNeurons; p++)
+                    {
+                        // add previous errorgradient by wieght
+                        errorGradSum = layers[i = 1].neurons[p].errorGradient * layers[i + 1].neurons[p].weights[j];
+                    }
+                    // multiply current errorgradient by the errorgradsum
+                    layers[i].neurons[j].errorGradient *= errorGradSum;
+                }
+
+                // k is looping through the inputs of that neuron
+                for (int k = 0; k < layers[i].neurons[j].numInputs; k++)
+                {
+                    // if it's the output layer
+                    if (i == numHidden)
+                    {
+                        error = desiredOutput[j] - outputs[j];
+                        // update the wight of the neuron with the alpha (which is the learning rate) by input by error
+                        layers[i].neurons[j].weights[k] += alpha * layers[i].neurons[j].inputs[k] * error;
+                    }
+                    else
+                    {
+                        // update the wight of the neuron with the alpha (which is the learning rate) by input by the neuron error gradient
+                        layers[i].neurons[j].weights[k] += alpha * layers[i].neurons[j].inputs[k] * layers[i].neurons[j].errorGradient;
+                    }
+                }
+                layers[i].neurons[j].bias += alpha * -1 * layers[i].neurons[j].errorGradient;
+            }
+        }
+    }
+
+    // also see en.wikipedia.org/wiki/Activation_function
+    private double ActivationFunction(double value)
+    {
+        // can swap between Step and Sigmmoid
+        return Sigmoid(value);
+        //return Step(value);
+
+    }
+
+    // aka binary step
+    private double Step(double value)
+    {
+        if (value < 0) return 0;
+        else return 1;
+    }
+
+    // aka logistic softstep
+    private double Sigmoid(double value)
+    {
+        // get the exponential of value
+        double k = (double)System.Math.Exp(value);
+        // return exp over 1 + exp
+        return k / (1.0f + k);
     }
 
 }
