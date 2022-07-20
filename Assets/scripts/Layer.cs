@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Layer : MonoBehaviour
+public class Layer
 {
     public int numNeurons;
     public List<Neuron> neurons = new List<Neuron>();
