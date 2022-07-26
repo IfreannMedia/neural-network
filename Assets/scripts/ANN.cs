@@ -81,7 +81,10 @@ public class ANN
                 // adjust the N value based on bias
                 N -= layers[i].neurons[j].bias;
                 // set this neurons output to the result of running N through our activation function
-                layers[i].neurons[j].output = ActivationFunction(N);
+                if (i == numHidden)
+                    layers[i].neurons[j].output = ActivationFunctionOutputLayer(N);
+                else
+                    layers[i].neurons[j].output = ActivationFunction(N);
                 outputs.Add(layers[i].neurons[j].output);
             }
 
@@ -149,8 +152,20 @@ public class ANN
     private double ActivationFunction(double value)
     {
         // can swap between Step and Sigmmoid
-        return Sigmoid(value);
+        //return Sigmoid(value);
         //return Step(value);
+        //return TanH(value);
+        return Relu(value);
+
+    }
+
+    private double ActivationFunctionOutputLayer(double value)
+    {
+        // can swap between Step and Sigmmoid
+        //return Sigmoid(value);
+        //return Step(value);
+        //return TanH(value);
+        return Sigmoid(value);
 
     }
 
@@ -168,6 +183,23 @@ public class ANN
         double k = (double)System.Math.Exp(value);
         // return exp over 1 + exp
         return k / (1.0f + k);
+    }
+
+    private double TanH(double value)
+    {
+        return (2 * (Sigmoid(2 * value)) - 1);
+    }
+
+    private double Relu(double value)
+    {
+        if (value > 0) return value;
+        else return 0;
+    }
+
+    private double LeakyRelu(double value)
+    {
+        if (value < 0) return 0.01 * value;
+        else return value;
     }
 
 }

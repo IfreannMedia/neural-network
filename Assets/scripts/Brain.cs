@@ -15,7 +15,7 @@ public class Brain : MonoBehaviour
 
         // run 1000 epochs of the training set (XOR)
         // the sum of squared error should get smaller
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < 100000; i++)
         {
             sumSquareError = 0;
             result = Train(1, 1, 0);
