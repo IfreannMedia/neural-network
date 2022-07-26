@@ -50,11 +50,10 @@ public class ANN
         }
 
         inputs = new List<double>(inputValues);
-
         // loop through layers
         for (int i = 0; i < numHidden + 1; i++)
         {
-            if (1 > 0)
+            if (i > 0)
             {
                 // if not on first layer, the inputs become the outputs of the previous layer
                 inputs = new List<double>(outputs);
@@ -119,7 +118,7 @@ public class ANN
                     for (int p = 0; p < layers[i + 1].numNeurons; p++)
                     {
                         // add previous errorgradient by wieght
-                        errorGradSum = layers[i = 1].neurons[p].errorGradient * layers[i + 1].neurons[p].weights[j];
+                        errorGradSum += layers[i + 1].neurons[p].errorGradient * layers[i + 1].neurons[p].weights[j];
                     }
                     // multiply current errorgradient by the errorgradsum
                     layers[i].neurons[j].errorGradient *= errorGradSum;

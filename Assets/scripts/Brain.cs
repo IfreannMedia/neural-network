@@ -34,20 +34,20 @@ public class Brain : MonoBehaviour
         Debug.Log("SSE: " + sumSquareError);
 
         result = Train(1, 1, 0);
-        Debug.Log(" 1 1 " + result[0]);
+        Debug.Log(" 1 1, exp 0: " + result[0]);
 
         result = Train(1, 0, 1);
-        Debug.Log(" 1 0 " + result[0]);
+        Debug.Log(" 1 0, exp 1: " + result[0]);
 
         result = Train(0, 1, 1);
-        Debug.Log(" 0 1 " + result[0]);
+        Debug.Log(" 0 1, exp 1: " + result[0]);
 
         result = Train(0, 0, 0);
-        Debug.Log(" 0 0 " + result[0]);
+        Debug.Log(" 0 0, exp 0: " + result[0]);
     }
 
     // the Train method, input1, input2, expected output
-    List<double> Train(double il, double i2, double o)
+    List<double> Train(double i1, double i2, double o)
     {
         List<double> inputs = new List<double>();
         List<double> outputs = new List<double>();
